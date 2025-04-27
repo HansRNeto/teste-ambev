@@ -15,4 +15,9 @@ public class SaleItem: BaseEntity
     public bool IsCancelled { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    
+    //EF Navigation
+    public virtual Sale Sale { get; set; }
+    //EF Navigation
+    public virtual Product Product { get; set; }
 }
