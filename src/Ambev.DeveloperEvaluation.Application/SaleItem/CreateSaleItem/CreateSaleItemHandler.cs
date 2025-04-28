@@ -17,10 +17,10 @@ namespace Ambev.DeveloperEvaluation.Application.SaleItem.CreateSaleItem
     /// </remarks>
     public class CreateSaleItemHandler : IRequestHandler<CreateSaleItemCommand, CreateSaleItemResult>
     {
-        private readonly ISaleItemItemRepository _itemRepository;
+        private readonly ISaleItemRepository _itemRepository;
         private readonly IMapper _mapper;
 
-        public CreateSaleItemHandler(ISaleItemItemRepository itemRepository, IMapper mapper)
+        public CreateSaleItemHandler(ISaleItemRepository itemRepository, IMapper mapper)
         {
             _itemRepository = itemRepository;
             _mapper = mapper;

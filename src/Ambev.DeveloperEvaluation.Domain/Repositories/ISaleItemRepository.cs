@@ -2,7 +2,7 @@ using Ambev.DeveloperEvaluation.Domain.Entities;
 
 namespace Ambev.DeveloperEvaluation.Domain.Repositories;
 
-public interface ISaleItemItemRepository
+public interface ISaleItemRepository
 {
     /// <summary>
     /// Creates a new saleItem in the repository

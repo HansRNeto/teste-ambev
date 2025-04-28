@@ -6,7 +6,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories;
 /// <summary>
 /// Implementation of ISaleItemItemRepository using Entity Framework Core
 /// </summary>
-public class SaleItemRepository : ISaleItemItemRepository
+public class SaleItemRepository : ISaleItemRepository
 {
     private readonly DefaultContext _context;
 
