@@ -1,6 +1,8 @@
+using Ambev.DeveloperEvaluation.Application.Sale.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         /// The request is validated before processing and the sale is persisted in the system.
         /// </summary>
         /// <remarks>
-        /// This endpoint allows users to create a new sale, including details like sale number, 
+        /// This endpoint allows Sales to create a new sale, including details like sale number, 
         /// customer information, branch information, and sale amount. 
         /// The request body should contain a valid <see cref="CreateSaleRequest"/> with necessary details.
         /// 
@@ -81,6 +83,45 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         }
 
         /// <summary>
+        /// Retrieves the details of a specific sale by its unique identifier.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint allows clients to retrieve detailed information about a sale using its unique ID.
+        /// It validates the request ID and returns a response containing the sale's data, including customer, branch, 
+        /// total amount, and other relevant sale details. The operation supports error handling in case the sale ID is invalid 
+        /// or not found in the system.
+        /// </remarks>
+        /// <param name="id">The unique identifier of the sale to be retrieved.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests during the operation.</param>
+        /// <returns>
+        /// A response with a status of 200 OK containing the sale's data if successful. 
+        /// A 400 Bad Request response will be returned if the request is invalid, 
+        /// and a 404 Not Found response will be returned if the sale with the provided ID does not exist.
+        /// </returns>
+        /// <response code="200">Returns the sale's details successfully retrieved from the database.</response>
+        /// <response code="400">If the provided ID is invalid or the request does not meet validation requirements.</response>
+        /// <response code="404">If the sale with the given ID is not found in the system.</response>
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponseWithData<GetSaleResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetSale([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var request = new GetSaleRequest { Id = id };
+            var validator = new GetSaleRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<GetSaleCommand>(request.Id);
+            var response = await _mediator.Send(command, cancellationToken);
+
+            var result = _mapper.Map<GetSaleResponse>(response);
+            return Ok(result, "Sale retrieved successfully");
+        }
+
+        /// <summary>
         /// Deletes a sale by its unique identifier.
         /// </summary>
         /// <remarks>
@@ -102,7 +143,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         /// <response code="200">Sale successfully deleted.</response>
         /// <response code="400">Invalid request (e.g., validation errors).</response>
         /// <response code="404">Sale not found for the provided ID.</response>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]

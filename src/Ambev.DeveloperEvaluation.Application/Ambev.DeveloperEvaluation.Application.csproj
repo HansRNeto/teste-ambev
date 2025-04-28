@@ -16,12 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Branch\GetBranch\" />
-    <Folder Include="Customer\GetCustomer\" />
-    <Folder Include="Product\GetProduct\" />
     <Folder Include="SaleItem\DeleteSaleItem\" />
     <Folder Include="SaleItem\GetSaleItem\" />
-    <Folder Include="Sale\GetSale\" />
   </ItemGroup>
 
 </Project>

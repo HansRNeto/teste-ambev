@@ -1,7 +1,9 @@
 using Ambev.DeveloperEvaluation.Application.Product.CreateProduct;
+using Ambev.DeveloperEvaluation.Application.Product.GetProduct;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Product.CreateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.DeleteProduct;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +73,45 @@ public class ProductsController : BaseController
     }
 
     /// <summary>
+    /// Retrieves the details of a specific Product by its unique identifier.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint allows clients to retrieve detailed information about a Product using its unique ID.
+    /// It validates the request ID and returns a response containing the Product's data, including customer, branch, 
+    /// total amount, and other relevant Product details. The operation supports error handling in case the Product ID is invalid 
+    /// or not found in the system.
+    /// </remarks>
+    /// <param name="id">The unique identifier of the Product to be retrieved.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests during the operation.</param>
+    /// <returns>
+    /// A response with a status of 200 OK containing the Product's data if successful. 
+    /// A 400 Bad Request response will be returned if the request is invalid, 
+    /// and a 404 Not Found response will be returned if the Product with the provided ID does not exist.
+    /// </returns>
+    /// <response code="200">Returns the Product's details successfully retrieved from the database.</response>
+    /// <response code="400">If the provided ID is invalid or the request does not meet validation requirements.</response>
+    /// <response code="404">If the Product with the given ID is not found in the system.</response>
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<GetProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProduct([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var request = new GetProductRequest { Id = id };
+        var validator = new GetProductRequestValidator();
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return BadRequest(validationResult.Errors);
+
+        var command = _mapper.Map<GetProductCommand>(request.Id);
+        var response = await _mediator.Send(command, cancellationToken);
+
+        var result = _mapper.Map<GetProductResponse>(response);
+        return Ok(result, "Product retrieved successfully");
+    }
+
+    /// <summary>
     /// Deletes a Product by its unique identifier.
     /// </summary>
     /// <remarks>
@@ -92,7 +133,7 @@ public class ProductsController : BaseController
     /// <response code="200">Product successfully deleted.</response>
     /// <response code="400">Invalid request (e.g., validation errors).</response>
     /// <response code="404">Product not found for the provided ID.</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
