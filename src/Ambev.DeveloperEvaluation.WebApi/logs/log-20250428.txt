@@ -1,0 +1,13 @@
+2025-04-28 12:35:45.785 -03:00 [INF] Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService Health Check enabled at: '/health'
+2025-04-28 12:35:45.870 -03:00 [INF] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager User profile is available. Using '/Users/macbook/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2025-04-28 12:35:45.906 -03:00 [INF] Microsoft.Hosting.Lifetime Now listening on: http://localhost:5119
+2025-04-28 12:35:45.907 -03:00 [INF] Microsoft.Hosting.Lifetime Application started. Press Ctrl+C to shut down.
+2025-04-28 12:35:45.907 -03:00 [INF] Microsoft.Hosting.Lifetime Hosting environment: Development
+2025-04-28 12:35:45.907 -03:00 [INF] Microsoft.Hosting.Lifetime Content root path: /Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend/src/Ambev.DeveloperEvaluation.WebApi
+2025-04-28 12:35:46.261 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request starting HTTP/1.1 GET http://localhost:5119/swagger/index.html - null null
+2025-04-28 12:35:46.360 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request finished HTTP/1.1 GET http://localhost:5119/swagger/index.html - 200 null text/html;charset=utf-8 100.9777ms
+2025-04-28 12:35:46.371 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request starting HTTP/1.1 GET http://localhost:5119/swagger/index.js - null null
+2025-04-28 12:35:46.385 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request finished HTTP/1.1 GET http://localhost:5119/swagger/index.js - 200 null application/javascript;charset=utf-8 13.5279ms
+2025-04-28 12:35:46.538 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request starting HTTP/1.1 GET http://localhost:5119/swagger/v1/swagger.json - null null
+2025-04-28 12:35:46.693 -03:00 [INF] Microsoft.AspNetCore.Hosting.Diagnostics Request finished HTTP/1.1 GET http://localhost:5119/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 154.3603ms
+2025-04-28 12:36:37.507 -03:00 [INF] Microsoft.Hosting.Lifetime Application is shutting down...

@@ -25,9 +25,11 @@ public class ProductRepository : IProductRepository
     /// <param name="product"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public Task<Product> CreateAsync(Product product, CancellationToken cancellationToken = default)
+    public async Task<Product> CreateAsync(Product product, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _context.Products.AddAsync(product, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+        return product;
     }
 
     /// <summary>

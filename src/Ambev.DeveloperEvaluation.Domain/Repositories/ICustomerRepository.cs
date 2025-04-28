@@ -19,6 +19,14 @@ public interface ICustomerRepository
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>The Customer if found, null otherwise</returns>
     Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Retrieves a Customer by their unique identifier
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The Customer if found, null otherwise</returns>
+    Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes a Customer from the repository

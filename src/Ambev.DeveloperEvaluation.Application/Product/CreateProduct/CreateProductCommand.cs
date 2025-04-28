@@ -30,6 +30,6 @@ namespace Ambev.DeveloperEvaluation.Application.Product.CreateProduct
         /// <summary>
         /// Gets or sets a value indicating whether the product is active.
         /// </summary>
-        public bool IsActive { get; set; } = false;
+        public bool IsActive { get; set; } = true;
     }
 }

@@ -2,6 +2,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer
 {
@@ -44,6 +45,11 @@ namespace Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer
 
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
+            
+            var existingCustomer = await _customerRepository.GetByEmailAsync(command.Email, cancellationToken);
+            if (existingCustomer != null)
+                throw new BadHttpRequestException($"Customer with email {command.Email} already exists");
+
 
             var customer = _mapper.Map<Domain.Entities.Customer>(command);
 
