@@ -48,6 +48,11 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     /// </summary>
     public bool IsCancelled { get; set; } = false;
     
+    /// <summary>
+    /// List of sale items associated with this sale.
+    /// </summary>
+    public ICollection<CreateSaleItemCommand> SaleItems { get; set; } = new List<CreateSaleItemCommand>();
+    
     public ValidationResultDetail Validate()
     {
         var validator = new CreateSaleCommandValidator();
