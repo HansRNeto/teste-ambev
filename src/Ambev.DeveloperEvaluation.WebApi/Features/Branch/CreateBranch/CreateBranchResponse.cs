@@ -1,31 +1,30 @@
-namespace Ambev.DeveloperEvaluation.Application.Branch.CreateBranch
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Branch.CreateBranch
 {
     /// <summary>
-    /// Represents the result of a branch creation operation.
+    /// Represents the response model for the creation of a new branch.
+    /// This model contains the details of the branch that was created, 
+    /// including its unique identifier, name, address, status, and timestamps for creation and updates.
     /// </summary>
-    /// <remarks>
-    /// This class contains the details of a branch that has been successfully created, including its unique identifier, 
-    /// name, address, active status, and timestamps for creation and last update.
-    /// </remarks>
-    public class CreateBranchResult
+    public class CreateBranchResponse
     {
         /// <summary>
-        /// Gets or sets the unique identifier of the created branch.
+        /// Gets or sets the unique identifier for the branch.
         /// </summary>
         public Guid Id { get; set; }
         
         /// <summary>
-        /// Gets or sets the name of the created branch.
+        /// Gets or sets the name of the branch.
         /// </summary>
         public string Name { get; set; } = string.Empty;
         
         /// <summary>
-        /// Gets or sets the address of the created branch.
+        /// Gets or sets the address of the branch.
         /// </summary>
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the branch is active.
+        /// Gets or sets the active status of the branch.
+        /// A value of true indicates the branch is active, false indicates it is inactive.
         /// </summary>
         public bool IsActive { get; set; } = true;
         
