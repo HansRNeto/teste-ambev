@@ -24,12 +24,27 @@ public class DefaultContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+        
+        if (!optionsBuilder.IsConfigured)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseNpgsql(connectionString, 
+                b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM"));
+        }
+    }
 }
 public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 {
     public DefaultContext CreateDbContext(string[] args)
     {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
+        var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
             .Build();
@@ -37,9 +52,10 @@ public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
         var builder = new DbContextOptionsBuilder<DefaultContext>();
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+        // Configurando o MigrationsAssembly para o projeto correto (Ambev.DeveloperEvaluation.ORM)
         builder.UseNpgsql(
-               connectionString,
-               b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.WebApi")
+            connectionString,
+            b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
         );
 
         return new DefaultContext(builder.Options);

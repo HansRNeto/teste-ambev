@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.8"
+services:
+  ambev.developerevaluation.webapi:
+    build:
+      context: "/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation\
+        \ (1)/template/backend"
+      dockerfile: "src/Ambev.DeveloperEvaluation.WebApi/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Ambev.DeveloperEvaluation.WebApi.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "ambevdeveloperevaluationwebapi:dev"
+    ports: []
+    volumes:
+    - "/Users/macbook/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend/src/Ambev.DeveloperEvaluation.WebApi:/app:rw"
+    - "/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend:/src:rw"
+    working_dir: "/app"

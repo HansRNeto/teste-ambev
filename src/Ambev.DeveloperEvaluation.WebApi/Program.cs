@@ -54,7 +54,7 @@ public class Program
 
             var app = builder.Build();
             app.UseMiddleware<ValidationExceptionMiddleware>();
-
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -78,6 +78,7 @@ public class Program
         }
         finally
         {
+            Log.Fatal("Application terminated unexpectedly");
             Log.CloseAndFlush();
         }
     }
