@@ -1,0 +1,1 @@
+/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend/obj/Debug/docker-compose.dcproj.CoreCompileInputs.cache
