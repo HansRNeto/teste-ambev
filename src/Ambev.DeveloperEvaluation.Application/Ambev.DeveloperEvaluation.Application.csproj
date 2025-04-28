@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ambev.DeveloperEvaluation.Domain\Ambev.DeveloperEvaluation.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />    
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="OneOf" Version="3.0.271" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Branch\DeleteBranch\" />
+    <Folder Include="Branch\GetBranch\" />
+    <Folder Include="Customer\DeleteCustomer\" />
+    <Folder Include="Customer\GetCustomer\" />
+    <Folder Include="Product\DeleteProduct\" />
+    <Folder Include="Product\GetProduct\" />
+    <Folder Include="SaleItem\DeleteSaleItem\" />
+    <Folder Include="SaleItem\GetSaleItem\" />
+    <Folder Include="Sale\DeleteSale\" />
+    <Folder Include="Sale\GetSale\" />
+  </ItemGroup>
+
+</Project>
