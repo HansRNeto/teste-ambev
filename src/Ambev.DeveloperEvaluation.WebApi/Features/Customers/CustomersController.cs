@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Customers.CreateCustomer;
+using Ambev.DeveloperEvaluation.WebApi.Features.Customers.DeleteCustomer;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,58 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Customers
                     Success = true,
                     Message = "Customer created successfully",
                     Data = _mapper.Map<CreateCustomerResponse>(response)
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Deletes a Customer by its unique identifier.
+        /// </summary>
+        /// <remarks>
+        /// This endpoint validates the provided Customer ID, sends a command to delete the Customer,
+        /// and returns an appropriate HTTP response based on the outcome.
+        /// 
+        /// - Returns 200 OK if the Customer is successfully deleted.
+        /// - Returns 400 Bad Request if the request validation fails.
+        /// - Returns 404 Not Found if no Customer with the specified ID exists.
+        /// 
+        /// The Customer deletion operation is executed via the <see cref="IMediator"/> command dispatching mechanism,
+        /// following the CQRS (Command Query Responsibility Segregation) pattern.
+        /// </remarks>
+        /// <param name="id">The unique identifier of the Customer to be deleted.</param>
+        /// <param name="cancellationToken">Token to cancel the operation if needed.</param>
+        /// <returns>
+        /// A standardized <see cref="ApiResponse"/> indicating success or failure of the operation.
+        /// </returns>
+        /// <response code="200">Customer successfully deleted.</response>
+        /// <response code="400">Invalid request (e.g., validation errors).</response>
+        /// <response code="404">Customer not found for the provided ID.</response>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var request = new DeleteCustomerRequest { Id = id };
+                var validator = new DeleteCustomerRequestValidator();
+                var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
+                var command = _mapper.Map<DeleteCustomerCommand>(request.Id);
+                await _mediator.Send(command, cancellationToken);
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Customer deleted successfully"
                 });
             }
             catch (Exception e)

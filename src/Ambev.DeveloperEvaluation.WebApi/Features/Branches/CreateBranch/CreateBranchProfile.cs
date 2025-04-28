@@ -1,7 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Branch.CreateBranch;
 using AutoMapper;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Branch.CreateBranch
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Branches.CreateBranch
 {
     /// <summary>
     /// AutoMapper profile class for mapping between CreateBranchRequest, CreateBranchCommand, 

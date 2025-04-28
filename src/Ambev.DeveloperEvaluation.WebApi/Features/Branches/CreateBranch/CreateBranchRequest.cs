@@ -1,4 +1,4 @@
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Branch.CreateBranch
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Branches.CreateBranch
 {
     /// <summary>
     /// Represents the request model for creating a new branch.

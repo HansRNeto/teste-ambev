@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Branch.CreateBranch
+namespace Ambev.DeveloperEvaluation.WebApi.Features.Branches.CreateBranch
 {
     /// <summary>
     /// Validates the request model for creating a new branch, ensuring that required fields are provided
