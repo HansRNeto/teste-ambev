@@ -13,9 +13,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales
             RuleFor(x => x.SaleNumber)
                 .NotEmpty().WithMessage("Sale number is required.");
 
-            RuleFor(x => x.SaleDate)
-                .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Sale date cannot be in the future.");
-
             RuleFor(x => x.CustomerId)
                 .NotEqual(Guid.Empty).WithMessage("Customer ID is required.");
 
@@ -28,11 +25,21 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales
             RuleFor(x => x.BranchName)
                 .NotEmpty().WithMessage("Branch name is required.");
 
-            RuleFor(x => x.TotalAmount)
-                .GreaterThan(0).WithMessage("Total amount must be greater than zero.");
+            RuleForEach(x => x.SaleItems)
+                .ChildRules(items =>
+                {
+                    items.RuleFor(i => i.ProductId)
+                        .NotEqual(Guid.Empty).WithMessage("Product ID is required.");
 
-            RuleFor(x => x.IsCancelled)
-                .NotNull().WithMessage("Cancellation status is required.");
+                    items.RuleFor(i => i.ProductName)
+                        .NotEmpty().WithMessage("Product name is required.");
+
+                    items.RuleFor(i => i.Quantity)
+                        .GreaterThan(0).WithMessage("Quantity must be greater than zero.");
+                });
+
+            RuleFor(x => x.SaleItems)
+                .NotEmpty().WithMessage("At least one sale item is required.");
         }
     }
 }

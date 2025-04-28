@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Application.Sale.CreateSale;
+using Ambev.DeveloperEvaluation.Application.SaleItem.CreateSaleItem;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
@@ -16,11 +17,6 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     /// Unique identifier for the sale (business code, not database ID).
     /// </summary>
     public string SaleNumber { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Date and time when the sale was made.
-    /// </summary>
-    public DateTime SaleDate { get; set; } = DateTime.UtcNow;
     
     /// <summary>
     /// External reference ID of the customer associated with the sale.

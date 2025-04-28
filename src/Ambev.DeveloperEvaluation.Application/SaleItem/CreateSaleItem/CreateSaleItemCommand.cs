@@ -1,3 +1,5 @@
+using Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.SaleItem.CreateSaleItem
@@ -55,5 +57,26 @@ namespace Ambev.DeveloperEvaluation.Application.SaleItem.CreateSaleItem
         /// Gets or sets a value indicating whether the sale item is cancelled.
         /// </summary>
         public bool IsCancelled { get; set; } = false;
+        
+        /// <summary>
+        /// Validates the current sale item creation command using the defined validator.
+        /// </summary>
+        /// <returns>
+        /// Returns a <see cref="ValidationResultDetail"/> object containing the validation status and any errors encountered during validation.
+        /// </returns>
+        /// <remarks>
+        /// This method uses the <see cref="CreateSaleItemCommandValidator"/> to ensure that the sale item creation request
+        /// adheres to the necessary validation rules, returning details about the validation process.
+        /// </remarks>
+        public ValidationResultDetail Validate()
+        {
+            var validator = new CreateSaleItemCommandValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
     }
 }

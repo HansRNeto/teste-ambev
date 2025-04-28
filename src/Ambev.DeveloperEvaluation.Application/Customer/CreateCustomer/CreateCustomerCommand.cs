@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer
@@ -34,5 +35,26 @@ namespace Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer
         /// A boolean value indicating whether the customer is active. The default value is <c>true</c>.
         /// </value>
         public bool IsActive { get; set; } = true;
+        
+        /// <summary>
+        /// Validates the current customer creation command using the defined validator.
+        /// </summary>
+        /// <returns>
+        /// Returns a <see cref="ValidationResultDetail"/> object containing validation result status and any errors encountered during validation.
+        /// </returns>
+        /// <remarks>
+        /// This method uses the <see cref="CreateCustomerCommandValidator"/> to ensure that the customer creation request
+        /// adheres to the necessary validation rules, returning details about the validation process.
+        /// </remarks>
+        public ValidationResultDetail Validate()
+        {
+            var validator = new CreateCustomerCommandValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
     }
 }
