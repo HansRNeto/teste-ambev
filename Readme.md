@@ -65,6 +65,7 @@ Antes de começar, verifique se você tem os seguintes softwares instalados na s
 - [Banco de Dados PostgreSQL](https://www.postgresql.org/download/)
 
 ### Passos para Executar Localmente
+- Executar todos os comandos dotnet na raiz do projeto
 
 1. ### **Clone o repositório**:
 
@@ -78,7 +79,7 @@ git clone https://github.com/HansRNeto/teste-ambev.git
 
 Execute o comando abaixo para restaurar as dependências do projeto:
 ```bash
-dotnet restore
+dotnet restore Ambev.DeveloperEvaluation.sln
 ```
 
 3. ### Configure a string de conexão com o banco de dados:
@@ -99,7 +100,7 @@ Certifique-se de ter o PostgreSQL instalado e rodando na sua máquina.
 Agora, execute o projeto localmente com o seguinte comando:
 
 ```bash
-dotnet run
+cd src/Ambev.DeveloperEvaluation.WebApi && dotnet run Ambev.DeveloperEvaluation.csproj
 ```
 
 O servidor estará disponível em:
@@ -116,16 +117,17 @@ Para rodar os testes localmente, siga os passos abaixo:
 
 1. Certifique-se de que todas as dependências estejam instaladas e o projeto compilado:
 ```bash
-dotnet build
+dotnet build Ambev.DeveloperEvaluation.sln
 ```
    
 2. Execute os testes com o seguinte comando:
 ```bash
-dotnet test
+dotnet test Ambev.DeveloperEvaluation.sln
 ```
    
 ### Detalhes
-- Os testes estão localizados no diretório tests/
+- Executar os comandos na raiz do projeto.
+- Os testes estão localizados no diretório tests.
 - É possível rodar testes de forma mais detalhada com:
 ```bash
 dotnet test --logger "console;verbosity=detailed"
