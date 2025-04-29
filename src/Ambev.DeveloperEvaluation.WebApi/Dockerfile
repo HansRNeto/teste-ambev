@@ -27,4 +27,10 @@ RUN dotnet publish "./Ambev.DeveloperEvaluation.WebApi.csproj" -c $BUILD_CONFIGU
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Ambev.DeveloperEvaluation.WebApi.dll"]
+
+COPY ./wait-for-it.sh /wait-for-it.sh
+
+USER root
+RUN chmod +x /wait-for-it.sh
+
+ENTRYPOINT ["/wait-for-it.sh", "ambev_developer_evaluation_database:5432", "--", "dotnet", "Ambev.DeveloperEvaluation.WebApi.dll"]

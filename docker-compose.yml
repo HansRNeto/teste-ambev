@@ -24,7 +24,6 @@ services:
       - ambev_developer_evaluation_database
       - ambev_developer_evaluation_nosql
       - ambev_developer_evaluation_cache
-    entrypoint: ["./wait-for-it.sh", "ambev_developer_evaluation_database:5432", "--", "dotnet", "YourApplication.dll"]
 
   ambev_developer_evaluation_database:
     container_name: ambev_developer_evaluation_database
