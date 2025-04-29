@@ -33,9 +33,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale
             RuleFor(x => x.BranchName)
                 .NotEmpty().WithMessage("Branch name must be provided.")
                 .MaximumLength(150).WithMessage("Branch name must not exceed 150 characters.");
-
-            RuleFor(x => x.TotalAmount)
-                .GreaterThanOrEqualTo(0).WithMessage("Total amount must be greater than or equal to zero.");
         }
     }
 }

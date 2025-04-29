@@ -51,12 +51,12 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     /// <summary>
     /// Gets or sets the creation date of the sale.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// Gets or sets the last update date of the sale.
     /// </summary>
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     
     /// <summary>
     /// List of sale items associated with this sale.

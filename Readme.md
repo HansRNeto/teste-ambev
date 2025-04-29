@@ -24,6 +24,7 @@ Sempre que a aplicação for iniciada (em ambiente local ou via Docker), as migr
 Este projeto pode ser executado tanto usando Docker quanto diretamente via `dotnet run`. Abaixo, explicamos como executar o projeto em ambas as opções.
 
 ## 🐳 Executando com Docker
+#### ⚠️ Este projeto está configurado para rodar facilmente com Docker. Ao iniciar os containers, tanto a aplicação quanto o banco de dados PostgreSQL são automaticamente levantados e conectados, com todas as configurações já definidas na aplicação.⚠️
 
 ### Pré-requisitos
 

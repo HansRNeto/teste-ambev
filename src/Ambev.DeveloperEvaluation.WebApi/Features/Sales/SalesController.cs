@@ -111,18 +111,25 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSale([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var request = new GetSaleRequest { Id = id };
-            var validator = new GetSaleRequestValidator();
-            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            try
+            {
+                var request = new GetSaleRequest { Id = id };
+                var validator = new GetSaleRequestValidator();
+                var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
 
-            var command = _mapper.Map<GetSaleCommand>(request.Id);
-            var response = await _mediator.Send(command, cancellationToken);
+                var command = _mapper.Map<GetSaleCommand>(request.Id);
+                var response = await _mediator.Send(command, cancellationToken);
 
-            var result = _mapper.Map<GetSaleResponse>(response);
-            return Ok(result, "Sale retrieved successfully");
+                var result = _mapper.Map<GetSaleResponse>(response);
+                return Ok(result, "Sale retrieved successfully");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>
@@ -179,7 +186,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
                 return BadRequest(e.Message);
             }
         }
-        
+
         /// <summary>
         /// Update a Sale.
         /// </summary>

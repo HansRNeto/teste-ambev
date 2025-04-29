@@ -36,11 +36,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale
         public string BranchName { get; set; }
 
         /// <summary>
-        /// Total monetary amount of the sale.
-        /// </summary>
-        public decimal TotalAmount { get; set; }
-
-        /// <summary>
         /// Indicates whether the sale has been cancelled.
         /// </summary>
         public bool IsCancelled { get; set; } = false;

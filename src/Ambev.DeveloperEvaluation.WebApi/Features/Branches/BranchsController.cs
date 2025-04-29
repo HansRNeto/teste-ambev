@@ -101,18 +101,25 @@ public class BranchsController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetBranch([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var request = new GetBranchRequest { Id = id };
-        var validator = new GetBranchRequestValidator();
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        try
+        {
+            var request = new GetBranchRequest { Id = id };
+            var validator = new GetBranchRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-        if (!validationResult.IsValid)
-            return BadRequest(validationResult.Errors);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<GetBranchCommand>(request.Id);
-        var response = await _mediator.Send(command, cancellationToken);
+            var command = _mapper.Map<GetBranchCommand>(request.Id);
+            var response = await _mediator.Send(command, cancellationToken);
 
-        var result = _mapper.Map<GetBranchResponse>(response);
-        return Ok(result, "Branch retrieved successfully");
+            var result = _mapper.Map<GetBranchResponse>(response);
+            return Ok(result, "Branch retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>
@@ -169,7 +176,7 @@ public class BranchsController : BaseController
             return BadRequest(e.Message);
         }
     }
-    
+
     /// <summary>
     /// Update a Branch.
     /// </summary>
