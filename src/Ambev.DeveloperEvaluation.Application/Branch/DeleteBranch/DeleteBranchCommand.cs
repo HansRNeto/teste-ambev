@@ -12,8 +12,17 @@ public class DeleteBranchCommand : IRequest<DeleteBranchResponse>
     /// <summary>
     /// Gets the unique identifier of the Branch to be deleted.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeleteBranchCommand"/> class.
+    /// </summary>
+    public DeleteBranchCommand()
+    {
+        
+    }
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteBranchCommand"/> class with the specified Branch ID.
     /// </summary>
