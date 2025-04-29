@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 using FluentAssertions;
 using Xunit;
 
@@ -17,7 +18,9 @@ public class ProductTests
             Name = "Product Test",
             Description = "Description Test",
             Price = 100.50m,
-            IsActive = true
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         var result = product.Validate();
@@ -31,16 +34,22 @@ public class ProductTests
     {
         var product = new Product
         {
-            Name = "",
+            Name = "", 
             Description = "Description Test",
             Price = 100.50m,
-            IsActive = true
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
-        var result = product.Validate();
+        var validator = new ProductValidator();
+
+        var result = validator.Validate(product);
 
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().ContainSingle(e => e.Error == "NotEmptyValidator");
+        result.Errors.Should().ContainSingle(e =>
+            e.PropertyName == "Name" &&
+            e.ErrorMessage == "Product name must be provided."
+        );
     }
 
     [Fact]

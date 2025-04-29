@@ -12,7 +12,7 @@ public class DeleteSaleCommand : IRequest<DeleteSaleResponse>
     /// <summary>
     /// Gets the unique identifier of the sale to be deleted.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteSaleCommand"/> class with the specified sale ID.
@@ -21,5 +21,10 @@ public class DeleteSaleCommand : IRequest<DeleteSaleResponse>
     public DeleteSaleCommand(Guid id)
     {
         Id = id;
+    }
+
+    public DeleteSaleCommand()
+    {
+        
     }
 }

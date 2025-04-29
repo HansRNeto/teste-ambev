@@ -15,7 +15,7 @@ public class GetSaleCommand : IRequest<GetSaleResult>
     /// <summary>
     /// Gets the unique identifier of the sale to be retrieved.
     /// </summary>
-    public Guid Id { get; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GetSaleCommand"/> class with the specified sale identifier.
@@ -24,5 +24,10 @@ public class GetSaleCommand : IRequest<GetSaleResult>
     public GetSaleCommand(Guid id)
     {
         Id = id;
+    }
+
+    public GetSaleCommand()
+    {
+        
     }
 }
