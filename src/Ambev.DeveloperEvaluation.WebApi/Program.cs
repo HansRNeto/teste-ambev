@@ -59,12 +59,18 @@ public class Program
             // "/https/dev-certificate.pfx" with the password "senhaSegura123".
             // This setup is useful in environments where the default developer certificate
             // is not available, such as inside Docker containers.
+            const string certificatePath = "/https/dev-certificate.pfx";
+            const string certificatePassword = "senhaSegura123";
+
             builder.WebHost.ConfigureKestrel(serverOptions =>
             {
-                serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+                if (File.Exists(certificatePath))
                 {
-                    httpsOptions.ServerCertificate = new X509Certificate2("/https/dev-certificate.pfx", "senhaSegura123");
-                });
+                    serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+                    {
+                        httpsOptions.ServerCertificate = new X509Certificate2(certificatePath, certificatePassword);
+                    });
+                }
             });
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
