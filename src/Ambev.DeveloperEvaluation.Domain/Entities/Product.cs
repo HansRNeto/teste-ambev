@@ -37,12 +37,12 @@ public class Product : BaseEntity
     /// <summary>
     /// Gets or sets the date and time when the product was created.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the date and time when the product was last updated.
     /// </summary>
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of sale items associated with this product.

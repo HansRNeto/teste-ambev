@@ -46,12 +46,12 @@ public class Customer : BaseEntity
     /// <summary>
     /// Gets or sets the timestamp indicating when the customer was created.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the timestamp indicating when the customer information was last updated.
     /// </summary>
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of sales associated with the customer.

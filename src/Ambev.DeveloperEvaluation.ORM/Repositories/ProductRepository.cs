@@ -43,7 +43,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         /// <returns>The <see cref="Product"/> entity if found, otherwise null.</returns>
         public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Products.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         /// </summary>
         /// <param name="page">The page number for pagination (starting from 1).</param>
         /// <param name="pageSize">The number of items per page.</param>
-        /// <param name="sortBy">The field name to sort the results by (e.g., ProductDate, CustomerName, TotalAmount).</param>
+        /// <param name="sortBy">The field name to sort the results by (e.g., ProductDate, ProductName, TotalAmount).</param>
         /// <param name="sortDirection">The sort direction ("ASC" for ascending, "DESC" for descending).</param>
         /// <param name="cancellationToken">Cancellation token to cancel the operation if needed.</param>
         /// <returns>A paginated and sorted collection of Products.</returns>
@@ -69,6 +69,25 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             query = query.Skip(pageSize * (page - 1)).Take(pageSize);
 
             return await query.ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Update a Product in the database.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="Task{Product}"/> representing the asynchronous operation, with the updated Product as the result.</returns>
+        public async Task<Product> UpdateAsync(Product product, CancellationToken cancellationToken)
+        {
+            _context.Products.Attach(product);
+            _context.Entry(product).Property(x => x.Name).IsModified = true;
+            _context.Entry(product).Property(x => x.Description).IsModified = true;
+            _context.Entry(product).Property(x => x.Price).IsModified = true;
+            _context.Entry(product).Property(x => x.IsActive).IsModified = true;
+            _context.Entry(product).Property(x => x.UpdatedAt).IsModified = true;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return product;
         }
 
         /// <summary>

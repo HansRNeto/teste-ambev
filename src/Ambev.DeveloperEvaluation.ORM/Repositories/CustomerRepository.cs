@@ -57,7 +57,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         /// <returns>A <see cref="Task{Customer}"/> representing the asynchronous operation, with the customer entity if found, or <c>null</c> otherwise.</returns>
         public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            return await _context.Customers
+            return await _context.Customers.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
@@ -84,6 +84,23 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             query = query.Skip(pageSize * (page - 1)).Take(pageSize);
 
             return await query.ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Update a customer in the database.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="Task{Customer}"/> representing the asynchronous operation, with the updated customer as the result.</returns>
+        public async Task<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken)
+        {
+            _context.Customers.Attach(customer);
+            _context.Entry(customer).Property(x => x.Name).IsModified = true;
+            _context.Entry(customer).Property(x => x.Email).IsModified = true;
+            _context.Entry(customer).Property(x => x.UpdatedAt).IsModified = true;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return customer;
         }
 
         /// <summary>

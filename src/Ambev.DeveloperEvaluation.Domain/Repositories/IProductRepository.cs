@@ -32,6 +32,14 @@ public interface IProductRepository
     Task<List<Product>> ListAsync(int page, int pageSize, string? sortBy, string? sortDirection, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Update a Product in the repository
+    /// </summary>
+    /// <param name="product"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The updated Product</returns>
+    Task<Product> UpdateAsync(Product product, CancellationToken cancellationToken);
+    
+    /// <summary>
     /// Deletes a Product from the repository
     /// </summary>
     /// <param name="id">The unique identifier of the Product to delete</param>

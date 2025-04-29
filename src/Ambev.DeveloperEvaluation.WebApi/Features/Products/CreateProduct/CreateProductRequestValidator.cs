@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.CreateProduct;
