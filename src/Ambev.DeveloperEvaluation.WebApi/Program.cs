@@ -19,7 +19,7 @@ public class Program
     {
         try
         {
-            Log.Information("Starting web application");
+            Console.WriteLine("Starting web application");
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
             builder.AddDefaultLogging();
@@ -86,16 +86,21 @@ public class Program
             app.UseBasicHealthChecks();
 
             app.MapControllers();
+            
+            Console.WriteLine("Initializing migrations...");
+            using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+            dbContext.ApplyMigrations();
 
             app.Run();
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Application terminated unexpectedly");
+            Console.Error.WriteLine($"Application terminated unexpectedly: {ex.Message}");
         }
         finally
         {
-            Log.Fatal("Application terminated unexpectedly");
+            Console.WriteLine("Application terminated unexpectedly");
             Log.CloseAndFlush();
         }
     }

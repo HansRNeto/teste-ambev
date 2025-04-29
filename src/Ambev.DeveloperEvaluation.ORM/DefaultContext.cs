@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.ORM;
 
@@ -23,6 +24,20 @@ public class DefaultContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
+    }
+    
+    public void ApplyMigrations()
+    {
+        try
+        {
+            Database.Migrate();
+            Console.WriteLine("Migrations applied!!!");
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"An error occured during migration: {e.Message}");
+            throw;
+        }
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
