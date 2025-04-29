@@ -52,8 +52,8 @@ docker compose up --build -d
 
 Após o Docker iniciar os serviços, a aplicação estará disponível em:
    
-- https://localhost:8081 (com HTTPS)
-- http://localhost:8080 (com HTTP)
+- https://localhost:8081/swagger/index.html (com HTTPS)
+- http://localhost:8080/swagger/index.html (com HTTP)
 
 ## 🖥️ Executando Localmente (Sem Docker)
 
@@ -103,8 +103,8 @@ dotnet run
 ```
 
 O servidor estará disponível em:
-- https://localhost:7181 (com HTTPS)
-- http://localhost:5119 (com HTTP)
+- https://localhost:7181/swagger/index.html (com HTTPS)
+- http://localhost:5119/swagger/index.html (com HTTP)
 
 ## ✅ Execução dos Testes
 
@@ -134,3 +134,189 @@ dotnet test --logger "console;verbosity=detailed"
 ### 🧪 Observações
 - Certifique-se de que o banco de dados de teste esteja configurado corretamente, se os testes dependerem dele.
 - Para garantir testes isolados e confiáveis, recomenda-se o uso de banco em memória (InMemory) ou mocks para dependências externas.
+
+## 📝 Curls dos Endpoints para Testes
+
+Aqui estão alguns exemplos de **CURL** para testar os principais endpoints da aplicação. Você pode rodá-los diretamente no terminal para simular requisições HTTP à API.
+
+### 1. **Produtos**
+
+- Criar Produto
+```bash
+curl --location 'https://localhost:8081/api/Products' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+  "name": "Pack Skol 6 unidades",
+  "description": "Pack com 6 latas de 350ml de Skol Pilsen",
+  "price": 24.90
+}'
+```
+
+- Listar Produtos
+```bash
+curl --location 'https://localhost:8081/api/Products?pageNumber=1&pageSize=25' \
+--header 'accept: text/plain'
+```
+- Pegar Produto
+```bash
+curl --location 'https://localhost:8081/api/Products/4bbc8767-1ee4-43d3-a0a6-17d78d1ddadd' \
+--header 'accept: text/plain'
+```
+- Atualizar Produto
+```bash
+curl --location --request PUT 'https://localhost:8081/api/Products/4bbc8767-1ee4-43d3-a0a6-17d78d1ddadd' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+    "name": "Copo Long Drink Brahma",
+    "description": "Copo acrílico de 300ml com logo Brahma impresso",
+    "price": 9.90,
+    "isActive": true
+}'
+```
+- Excluir Produto
+```bash
+curl --location --request DELETE 'https://localhost:8081/api/Products/0f964a5d-fc0a-4693-90b1-c0c588e3bf9d' \
+--header 'accept: text/plain'
+```
+
+### 2. **Clientes**
+
+- Criar Cliente
+```bash
+curl --location 'https://localhost:8081/api/Customers' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "Cliente I",
+  "email": "cliente.one@gmail.com"
+}'
+```
+
+- Listar Clientes
+```bash
+curl --location 'https://localhost:8081/api/Customers?pageNumber=1&pageSize=25' \
+--header 'accept: text/plain'
+```
+- Pegar Cliente
+```bash
+curl --location 'https://localhost:8081/api/Customers/{id}' \
+--header 'accept: text/plain'
+```
+- Atualizar Cliente
+```bash
+curl --location --request PUT 'https://localhost:8081/api/Customers/{id}' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "Cliente I",
+    "email": "cliente.one@gmail.com",
+    "isActive": true
+}'
+```
+- Excluir Cliente
+```bash
+curl --location --request DELETE 'https://localhost:8081/api/Products/{id}' \
+--header 'accept: text/plain'
+```
+
+### 3. **Filiais**
+
+- Criar Filial
+```bash
+curl --location 'https://localhost:8081/api/Branchs' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+  "name": "Filial I",
+  "address": "Rua das Palmeiras, 123 - Centro, São Paulo - SP"
+}'
+```
+
+- Listar Filias
+```bash
+curl --location 'https://localhost:8081/api/Branchs?pageNumber=1&pageSize=25' \
+--header 'accept: text/plain'
+```
+- Pegar Filial
+```bash
+curl --location 'https://localhost:8081/api/Branchs/{id}' \
+--header 'accept: text/plain'
+```
+- Atualizar Filial
+```bash
+curl --location --request PUT 'https://localhost:8081/api/Branchs/{id}' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+  "name": "Filial I",
+  "address": "Rua das Palmeiras, 123 - Centro, São Paulo - SP",
+  "isActive": true
+}'
+```
+- Excluir Filial
+```bash
+curl --location --request DELETE 'https://localhost:8081/api/Branchs/{id}' \
+--header 'accept: text/plain'
+```
+
+### 4. **Vendas**
+
+- Criar Venda
+```bash
+curl --location 'https://localhost:8081/api/Sales' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+  "saleNumber": "001",
+  "customerId": "{customerIds}",
+  "customerName": "{customerName}",
+  "branchId": "{branchId}",
+  "branchName": "{branchName}",
+  "saleItems": [
+    {
+      "productId": "{productId}",
+      "productName": {productName},
+      "quantity": 3
+    }
+  ]
+}'
+```
+
+- Listar Vendas
+```bash
+curl --location 'https://localhost:8081/api/Sales?pageNumber=1&pageSize=25' \
+--header 'accept: text/plain'
+```
+- Pegar Venda
+```bash
+curl --location 'https://localhost:8081/api/Sales/{id}' \
+--header 'accept: text/plain'
+```
+- Atualizar Venda
+```bash
+curl --location --request PUT 'https://localhost:8081/api/Sales/{id}' \
+--header 'accept: text/plain' \
+--header 'Content-Type: application/json' \
+--data '{
+  "saleNumber": "002",
+  "customerId": "{customerId}",
+  "customerName": "{customerName}",
+  "branchId": "{branchId}",
+  "branchName": "{branchName}",
+  "isCancelled": false
+}'
+```
+- Excluir Venda
+```bash
+curl --location --request DELETE 'https://localhost:8081/api/Sales/{id}' \
+--header 'accept: text/plain'
+```
+
+### 🧪 Observação
+- Todos os valores são representativos, sendo necessário adequa-los para o seu ambiente de desenvolvimento.
+
+## Para mais informações acesse o swagger
+- https://localhost:8081/swagger/index.html (DOCKER)
+- https://localhost:7181/swagger/index.html (LOCAL)
