@@ -47,6 +47,31 @@ public class BranchRepository : IBranchRepository
     {
         return await _context.Branches.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
+    
+    /// <summary>
+    /// Retrieves a paginated and sorted list of Branchs based on the provided parameters.
+    /// </summary>
+    /// <param name="page">The page number for pagination (starting from 1).</param>
+    /// <param name="pageSize">The number of items per page.</param>
+    /// <param name="sortBy">The field name to sort the results by (e.g., BranchDate, BranchName, TotalAmount).</param>
+    /// <param name="sortDirection">The sort direction ("ASC" for ascending, "DESC" for descending).</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation if needed.</param>
+    /// <returns>A paginated and sorted collection of Branches.</returns>
+    public async Task<List<Branch>> ListAsync(int page, int pageSize, string? sortBy, string? sortDirection, CancellationToken cancellationToken)
+    {
+        var query = _context.Branches.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(sortBy))
+        {
+            query = string.Equals(sortDirection, "DESC", StringComparison.OrdinalIgnoreCase)
+                ? query.OrderByDescending(e => EF.Property<object>(e, sortBy))
+                : query.OrderBy(e => EF.Property<object>(e, sortBy));
+        }
+
+        query = query.Skip(pageSize * (page - 1)).Take(pageSize);
+
+        return await query.ToListAsync(cancellationToken);
+    }
 
     /// <summary>
     /// Deletes a branch by its unique identifier.

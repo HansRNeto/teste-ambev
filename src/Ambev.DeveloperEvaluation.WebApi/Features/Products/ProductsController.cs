@@ -1,9 +1,11 @@
 using Ambev.DeveloperEvaluation.Application.Product.CreateProduct;
 using Ambev.DeveloperEvaluation.Application.Product.GetProduct;
+using Ambev.DeveloperEvaluation.Application.Product.ListProducts;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Product.CreateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -109,6 +111,61 @@ public class ProductsController : BaseController
 
         var result = _mapper.Map<GetProductResponse>(response);
         return Ok(result, "Product retrieved successfully");
+    }
+
+    /// <summary>
+    /// Retrieves a paginated list of Products with optional sorting.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint allows clients to retrieve a list of Products with support for pagination and optional sorting by a specified field.
+    /// It validates the request parameters and returns a paginated collection of Products, including information such as customer, branch, 
+    /// total amount, and Product status. The operation supports error handling for invalid requests or if no Products are found.
+    /// </remarks>
+    /// <param name="pageNumber">The number of the page to be retrieved (starting from 1).</param>
+    /// <param name="pageSize">The number of records to include in each page.</param>
+    /// <param name="sortBy">The field to sort the Products by (optional).</param>
+    /// <param name="sortDirection">The direction of the sorting: 'asc' for ascending or 'desc' for descending (optional).</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests during the operation.</param>
+    /// <returns>
+    /// A response with a status of 200 OK containing the paginated list of Products if successful.
+    /// A 400 Bad Request response will be returned if the request parameters are invalid,
+    /// and a 404 Not Found response will be returned if no Products are found for the given parameters.
+    /// </returns>
+    /// <response code="200">Returns the paginated list of Products successfully retrieved from the database.</response>
+    /// <response code="400">If the provided pagination or sorting parameters are invalid or missing.</response>
+    /// <response code="404">If no Products are found matching the provided query parameters.</response>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<List<ListProductsResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProducts(int pageNumber, int pageSize, string? sortBy,
+        string? sortDirection, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new ListProductsRequest()
+            {
+                PageNumber = pageNumber,
+                SortDirection = sortDirection,
+                SortBy = sortBy,
+                PageSize = pageSize
+            };
+            var validator = new ListProductsRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<ListProductsCommand>(request);
+            var response = await _mediator.Send(command, cancellationToken);
+
+            var result = _mapper.Map<List<ListProductsResponse>>(response);
+            return Ok(result, "List products retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>

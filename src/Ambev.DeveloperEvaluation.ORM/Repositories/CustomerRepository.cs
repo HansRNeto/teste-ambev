@@ -62,6 +62,31 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         /// <summary>
+        /// Retrieves a paginated and sorted list of Customers based on the provided parameters.
+        /// </summary>
+        /// <param name="page">The page number for pagination (starting from 1).</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="sortBy">The field name to sort the results by (e.g., CustomerDate, CustomerName, TotalAmount).</param>
+        /// <param name="sortDirection">The sort direction ("ASC" for ascending, "DESC" for descending).</param>
+        /// <param name="cancellationToken">Cancellation token to cancel the operation if needed.</param>
+        /// <returns>A paginated and sorted collection of Customers.</returns>
+        public async Task<List<Customer>> ListAsync(int page, int pageSize, string? sortBy, string? sortDirection, CancellationToken cancellationToken)
+        {
+            var query = _context.Customers.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                query = string.Equals(sortDirection, "DESC", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderByDescending(e => EF.Property<object>(e, sortBy))
+                    : query.OrderBy(e => EF.Property<object>(e, sortBy));
+            }
+
+            query = query.Skip(pageSize * (page - 1)).Take(pageSize);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
         /// Deletes a customer from the database by their unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the customer to delete.</param>

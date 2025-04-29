@@ -47,6 +47,37 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         /// <summary>
+        /// Retrieves a paginated and sorted list of sales based on the provided parameters.
+        /// </summary>
+        /// <param name="page">The page number for pagination (starting from 1).</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <param name="sortBy">The field name to sort the results by (e.g., SaleDate, CustomerName, TotalAmount).</param>
+        /// <param name="sortDirection">The sort direction ("ASC" for ascending, "DESC" for descending).</param>
+        /// <param name="cancellationToken">Cancellation token to cancel the operation if needed.</param>
+        /// <returns>A paginated and sorted collection of sales.</returns>
+        public async Task<ICollection<Sale>> ListAsync(
+            int page,
+            int pageSize,
+            string sortBy,
+            string sortDirection,
+            CancellationToken cancellationToken = default)
+        {
+            var query = _context.Sales.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                query = string.Equals(sortDirection, "DESC", StringComparison.OrdinalIgnoreCase)
+                    ? query.OrderByDescending(e => EF.Property<object>(e, sortBy))
+                    : query.OrderBy(e => EF.Property<object>(e, sortBy));
+            }
+
+            query = query.Skip(pageSize * (page - 1)).Take(pageSize);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+
+        /// <summary>
         /// Asynchronously deletes a sale by its unique identifier.
         /// If the sale is found, it is removed from the Sales table and changes are saved to the database.
         /// </summary>

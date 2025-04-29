@@ -1,9 +1,11 @@
 using Ambev.DeveloperEvaluation.Application.Branch.CreateBranch;
 using Ambev.DeveloperEvaluation.Application.Branch.GetBranch;
+using Ambev.DeveloperEvaluation.Application.Branch.ListBranches;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.CreateBranch;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.DeleteBranch;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.GetBranch;
+using Ambev.DeveloperEvaluation.WebApi.Features.Branches.ListBranches;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -109,6 +111,61 @@ public class BranchsController : BaseController
 
         var result = _mapper.Map<GetBranchResponse>(response);
         return Ok(result, "Branch retrieved successfully");
+    }
+
+    /// <summary>
+    /// Retrieves a paginated list of Branches with optional sorting.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint allows clients to retrieve a list of Branches with support for pagination and optional sorting by a specified field.
+    /// It validates the request parameters and returns a paginated collection of Branches, including information such as customer, branch, 
+    /// total amount, and Branch status. The operation supports error handling for invalid requests or if no Branches are found.
+    /// </remarks>
+    /// <param name="pageNumber">The number of the page to be retrieved (starting from 1).</param>
+    /// <param name="pageSize">The number of records to include in each page.</param>
+    /// <param name="sortBy">The field to sort the Branches by (optional).</param>
+    /// <param name="sortDirection">The direction of the sorting: 'asc' for ascending or 'desc' for descending (optional).</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests during the operation.</param>
+    /// <returns>
+    /// A response with a status of 200 OK containing the paginated list of Branches if successful.
+    /// A 400 Bad Request response will be returned if the request parameters are invalid,
+    /// and a 404 Not Found response will be returned if no Branches are found for the given parameters.
+    /// </returns>
+    /// <response code="200">Returns the paginated list of Branches successfully retrieved from the database.</response>
+    /// <response code="400">If the provided pagination or sorting parameters are invalid or missing.</response>
+    /// <response code="404">If no Branches are found matching the provided query parameters.</response>
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseWithData<List<ListBranchesResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetBranches(int pageNumber, int pageSize, string? sortBy,
+        string? sortDirection, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new ListBranchesRequest()
+            {
+                PageNumber = pageNumber,
+                SortDirection = sortDirection,
+                SortBy = sortBy,
+                PageSize = pageSize
+            };
+            var validator = new ListBranchesRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<ListBranchesCommand>(request);
+            var response = await _mediator.Send(command, cancellationToken);
+
+            var result = _mapper.Map<List<ListBranchesResponse>>(response);
+            return Ok(result, "List Branches retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>
