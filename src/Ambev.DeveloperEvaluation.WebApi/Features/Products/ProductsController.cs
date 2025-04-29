@@ -102,18 +102,25 @@ public class ProductsController : BaseController
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProduct([FromRoute] Guid id, CancellationToken cancellationToken)
     {
-        var request = new GetProductRequest { Id = id };
-        var validator = new GetProductRequestValidator();
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        try
+        {
+            var request = new GetProductRequest { Id = id };
+            var validator = new GetProductRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-        if (!validationResult.IsValid)
-            return BadRequest(validationResult.Errors);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
-        var command = _mapper.Map<GetProductCommand>(request.Id);
-        var response = await _mediator.Send(command, cancellationToken);
+            var command = _mapper.Map<GetProductCommand>(request.Id);
+            var response = await _mediator.Send(command, cancellationToken);
 
-        var result = _mapper.Map<GetProductResponse>(response);
-        return Ok(result, "Product retrieved successfully");
+            var result = _mapper.Map<GetProductResponse>(response);
+            return Ok(result, "Product retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>
@@ -170,7 +177,7 @@ public class ProductsController : BaseController
             return BadRequest(e.Message);
         }
     }
-    
+
     /// <summary>
     /// Update a Product.
     /// </summary>

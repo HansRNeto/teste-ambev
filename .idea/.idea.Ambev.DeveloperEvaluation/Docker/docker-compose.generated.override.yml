@@ -7,30 +7,16 @@ services:
         \ (1)/template/backend"
       dockerfile: "src/Ambev.DeveloperEvaluation.WebApi/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-arm64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Ambev.DeveloperEvaluation.WebApi.dll"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "ambev_developer_evaluation_webapi:dev"
-    ports:
-    - "127.0.0.1:57014:57100"
-    - "127.0.0.1:57214:57300"
+    ports: []
     volumes:
     - "/Users/macbook/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend/src/Ambev.DeveloperEvaluation.WebApi:/app:rw"
     - "/Users/macbook/Documents/Projetos/abi-gth-omnia-developer-evaluation (1)/template/backend:/src:rw"
-    - "/Users/macbook/.local/share/JetBrains/RiderRemoteDebugger/2024.2.7/LinuxArm64:/opt/rider-debugger"
-    - "/Applications/Rider.app/Contents/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/Users/macbook/Library/Logs/JetBrains/Rider2024.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_4_29_13_13_16:/var/opt/rider-debugger:rw"
     working_dir: "/app"
