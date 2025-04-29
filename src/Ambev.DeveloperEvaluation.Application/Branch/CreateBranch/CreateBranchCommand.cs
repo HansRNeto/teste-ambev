@@ -1,3 +1,5 @@
+using Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Branch.CreateBranch
@@ -28,5 +30,26 @@ namespace Ambev.DeveloperEvaluation.Application.Branch.CreateBranch
         /// </summary>
         /// <value>A boolean indicating if the branch is active.</value>
         public bool IsActive { get; set; } = true;
+        
+        /// <summary>
+        /// Validates the current branch creation command using the defined validator.
+        /// </summary>
+        /// <returns>
+        /// Returns a <see cref="ValidationResultDetail"/> object containing the validation status and any errors encountered during validation.
+        /// </returns>
+        /// <remarks>
+        /// This method uses the <see cref="CreateBranchCommandValidator"/> to ensure that the branch creation request
+        /// adheres to the necessary validation rules, returning details about the validation process.
+        /// </remarks>
+        public ValidationResultDetail Validate()
+        {
+            var validator = new CreateBranchCommandValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
     }
 }

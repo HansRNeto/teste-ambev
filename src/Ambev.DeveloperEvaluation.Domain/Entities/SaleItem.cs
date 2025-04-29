@@ -13,8 +13,8 @@ public class SaleItem: BaseEntity
     public decimal DiscountAmount { get; set; }
     public decimal TotalAmount { get; set; }
     public bool IsCancelled { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
     
     //EF Navigation
     public virtual Sale Sale { get; set; }
