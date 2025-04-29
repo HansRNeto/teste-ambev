@@ -34,6 +34,16 @@ namespace Ambev.DeveloperEvaluation.Application.Product.CreateProduct
         public bool IsActive { get; set; } = true;
         
         /// <summary>
+        /// Gets or sets the creation date of the product.
+        /// </summary>
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the last update date of the product.
+        /// </summary>
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        
+        /// <summary>
         /// Validates the current product creation command using the defined validator.
         /// </summary>
         /// <returns>

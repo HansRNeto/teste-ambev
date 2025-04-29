@@ -37,6 +37,16 @@ namespace Ambev.DeveloperEvaluation.Application.Customer.CreateCustomer
         public bool IsActive { get; set; } = true;
         
         /// <summary>
+        /// Gets or sets the creation date of the customer.
+        /// </summary>
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the last update date of the customer.
+        /// </summary>
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        
+        /// <summary>
         /// Validates the current customer creation command using the defined validator.
         /// </summary>
         /// <returns>

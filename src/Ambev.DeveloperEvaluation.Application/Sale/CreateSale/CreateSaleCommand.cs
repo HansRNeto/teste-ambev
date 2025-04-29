@@ -49,6 +49,16 @@ public class CreateSaleCommand : IRequest<CreateSaleResult>
     public bool IsCancelled { get; set; } = false;
     
     /// <summary>
+    /// Gets or sets the creation date of the sale.
+    /// </summary>
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    /// <summary>
+    /// Gets or sets the last update date of the sale.
+    /// </summary>
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    
+    /// <summary>
     /// List of sale items associated with this sale.
     /// </summary>
     public ICollection<CreateSaleItemCommand> SaleItems { get; set; } = new List<CreateSaleItemCommand>();
