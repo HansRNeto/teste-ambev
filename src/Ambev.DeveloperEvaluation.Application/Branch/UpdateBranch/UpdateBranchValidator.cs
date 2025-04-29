@@ -19,6 +19,10 @@ namespace Ambev.DeveloperEvaluation.Application.Branch.UpdateBranch
         /// </summary>
         public UpdateBranchCommandValidator()
         {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("Branch Id must be provided.");
+            
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Branch name must be provided.")
                 .MaximumLength(100).WithMessage("Branch name must not exceed 100 characters.");
