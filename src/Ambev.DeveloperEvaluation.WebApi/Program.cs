@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Ambev.DeveloperEvaluation.Application;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
@@ -30,11 +31,15 @@ public class Program
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<DefaultContext>(options =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING") ??
+                                       builder.Configuration.GetConnectionString("DefaultConnection");
+
                 options.UseNpgsql(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    connectionString,
                     b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
-                )
-            );
+                );
+            });
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -48,6 +53,18 @@ public class Program
                     typeof(ApplicationLayer).Assembly,
                     typeof(Program).Assembly
                 );
+            });
+            
+            // Configures Kestrel to use a custom HTTPS certificate located at
+            // "/https/dev-certificate.pfx" with the password "senhaSegura123".
+            // This setup is useful in environments where the default developer certificate
+            // is not available, such as inside Docker containers.
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ConfigureHttpsDefaults(httpsOptions =>
+                {
+                    httpsOptions.ServerCertificate = new X509Certificate2("/https/dev-certificate.pfx", "senhaSegura123");
+                });
             });
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
