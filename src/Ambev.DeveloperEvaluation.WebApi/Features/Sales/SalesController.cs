@@ -1,10 +1,12 @@
 using Ambev.DeveloperEvaluation.Application.Sale.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sale.ListSales;
+using Ambev.DeveloperEvaluation.Application.Sale.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CreateSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.ListSales;
+using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +41,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         /// </summary>
         /// <remarks>
         /// This endpoint allows Sales to create a new sale, including details like sale number, 
-        /// customer information, branch information, and sale amount. 
+        /// Sale information, branch information, and sale amount. 
         /// The request body should contain a valid <see cref="CreateSaleRequest"/> with necessary details.
         /// 
         /// If validation fails, the endpoint returns a 400 Bad Request with details about the validation errors.
@@ -89,7 +91,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         /// </summary>
         /// <remarks>
         /// This endpoint allows clients to retrieve detailed information about a sale using its unique ID.
-        /// It validates the request ID and returns a response containing the sale's data, including customer, branch, 
+        /// It validates the request ID and returns a response containing the sale's data, including Sale, branch, 
         /// total amount, and other relevant sale details. The operation supports error handling in case the sale ID is invalid 
         /// or not found in the system.
         /// </remarks>
@@ -128,7 +130,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
         /// </summary>
         /// <remarks>
         /// This endpoint allows clients to retrieve a list of sales with support for pagination and optional sorting by a specified field.
-        /// It validates the request parameters and returns a paginated collection of sales, including information such as customer, branch, 
+        /// It validates the request parameters and returns a paginated collection of sales, including information such as Sale, branch, 
         /// total amount, and sale status. The operation supports error handling for invalid requests or if no sales are found.
         /// </remarks>
         /// <param name="pageNumber">The number of the page to be retrieved (starting from 1).</param>
@@ -171,6 +173,46 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
 
                 var result = _mapper.Map<List<ListSalesResponse>>(response);
                 return Ok(result, "List sales retrieved successfully");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Update a Sale.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request">The request containing Sale details.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation if needed.</param>
+        /// <returns>A response with the updated Sale data or validation errors.</returns>
+        /// <response code="201">Sale updated successfully. Returns the Sale details in the response body.</response>
+        /// <response code="400">Bad Request. Validation failed for the provided Sale data.</response>
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponseWithData<UpdateSaleResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateSale([FromRoute] Guid id, [FromBody] UpdateSaleRequest request,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var validator = new UpdateSaleRequestValidator();
+                var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+                if (!validationResult.IsValid)
+                    return BadRequest(validationResult.Errors);
+
+                var command = _mapper.Map<UpdateSaleCommand>(request);
+                command.Id = id;
+                var response = await _mediator.Send(command, cancellationToken);
+
+                return Created(string.Empty, new ApiResponseWithData<UpdateSaleResponse>
+                {
+                    Success = true,
+                    Message = "Sale updated successfully",
+                    Data = _mapper.Map<UpdateSaleResponse>(response)
+                });
             }
             catch (Exception e)
             {

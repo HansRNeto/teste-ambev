@@ -52,9 +52,9 @@ namespace Ambev.DeveloperEvaluation.Application.Customer.UpdateCustomer
             
             var customer = _mapper.Map<Domain.Entities.Customer>(command);
 
-            var createdCustomer = await _customerRepository.UpdateAsync(customer, cancellationToken);
+            var updatedCustomer = await _customerRepository.UpdateAsync(customer, cancellationToken);
 
-            var result = _mapper.Map<UpdateCustomerResult>(createdCustomer);
+            var result = _mapper.Map<UpdateCustomerResult>(updatedCustomer);
             return result;
         }
     }

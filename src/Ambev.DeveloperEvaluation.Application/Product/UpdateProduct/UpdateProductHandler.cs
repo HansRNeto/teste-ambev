@@ -52,9 +52,9 @@ namespace Ambev.DeveloperEvaluation.Application.Product.UpdateProduct
             
             var product = _mapper.Map<Domain.Entities.Product>(command);
 
-            var createdProduct = await _productRepository.UpdateAsync(product, cancellationToken);
+            var updatedProduct = await _productRepository.UpdateAsync(product, cancellationToken);
 
-            var result = _mapper.Map<UpdateProductResult>(createdProduct);
+            var result = _mapper.Map<UpdateProductResult>(updatedProduct);
             return result;
         }
     }

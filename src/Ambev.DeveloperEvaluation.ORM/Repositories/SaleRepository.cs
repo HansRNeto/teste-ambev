@@ -43,7 +43,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         /// <returns>The <see cref="Sale"/> entity if found, otherwise null.</returns>
         public async Task<Sale?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Sales.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+            return await _context.Sales.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
 
         /// <summary>
@@ -76,6 +76,25 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Update a Sale in the database.
+        /// </summary>
+        /// <param name="sale"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="Task{Sale}"/> representing the asynchronous operation, with the updated Sale as the result.</returns>
+        public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken)
+        {
+            _context.Sales.Attach(sale);
+            _context.Entry(sale).Property(x => x.BranchId).IsModified = true;
+            _context.Entry(sale).Property(x => x.BranchName).IsModified = true;
+            _context.Entry(sale).Property(x => x.CustomerId).IsModified = true;
+            _context.Entry(sale).Property(x => x.CustomerName).IsModified = true;
+            _context.Entry(sale).Property(x => x.SaleNumber).IsModified = true;
+            _context.Entry(sale).Property(x => x.UpdatedAt).IsModified = true;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return sale;
+        }
 
         /// <summary>
         /// Asynchronously deletes a sale by its unique identifier.

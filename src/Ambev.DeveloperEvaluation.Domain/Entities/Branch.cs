@@ -32,12 +32,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// <summary>
         /// Gets or sets the creation date of the branch.
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the last update date of the branch.
         /// </summary>
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; }
 
         /// <summary>
         /// Gets or sets the list of sales associated with the branch.
