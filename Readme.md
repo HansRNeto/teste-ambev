@@ -46,7 +46,7 @@ Na Raiz do projeto execute o seguinte comando:
 ```bash
 docker compose up --build -d
 ```
-- Obs.: Caso queira manter o terminal para interação no container, remove o parametro "-d"
+- Obs.: Caso queira manter o terminal para interação no container, remover o parâmetro "-d"
 
 ### 3. **Acesse a aplicação**:
 
@@ -130,7 +130,7 @@ dotnet test Ambev.DeveloperEvaluation.sln
 - Os testes estão localizados no diretório tests.
 - É possível rodar testes de forma mais detalhada com:
 ```bash
-dotnet test --logger "console;verbosity=detailed"
+dotnet test Ambev.DeveloperEvaluation.sln --logger "console;verbosity=detailed"
 ```
 
 ### 🧪 Observações
