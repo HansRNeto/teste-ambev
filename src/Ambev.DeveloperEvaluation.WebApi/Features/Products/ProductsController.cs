@@ -1,11 +1,14 @@
 using Ambev.DeveloperEvaluation.Application.Product.CreateProduct;
 using Ambev.DeveloperEvaluation.Application.Product.GetProduct;
 using Ambev.DeveloperEvaluation.Application.Product.ListProducts;
+using Ambev.DeveloperEvaluation.Application.Product.UpdateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Product.CreateProduct;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.GetProduct;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products.ListProducts;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.UpdateProduct;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +82,7 @@ public class ProductsController : BaseController
     /// </summary>
     /// <remarks>
     /// This endpoint allows clients to retrieve detailed information about a Product using its unique ID.
-    /// It validates the request ID and returns a response containing the Product's data, including customer, branch, 
+    /// It validates the request ID and returns a response containing the Product's data, including Product, branch, 
     /// total amount, and other relevant Product details. The operation supports error handling in case the Product ID is invalid 
     /// or not found in the system.
     /// </remarks>
@@ -118,7 +121,7 @@ public class ProductsController : BaseController
     /// </summary>
     /// <remarks>
     /// This endpoint allows clients to retrieve a list of Products with support for pagination and optional sorting by a specified field.
-    /// It validates the request parameters and returns a paginated collection of Products, including information such as customer, branch, 
+    /// It validates the request parameters and returns a paginated collection of Products, including information such as Product, branch, 
     /// total amount, and Product status. The operation supports error handling for invalid requests or if no Products are found.
     /// </remarks>
     /// <param name="pageNumber">The number of the page to be retrieved (starting from 1).</param>
@@ -161,6 +164,46 @@ public class ProductsController : BaseController
 
             var result = _mapper.Map<List<ListProductsResponse>>(response);
             return Ok(result, "List products retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /// <summary>
+    /// Update a Product.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request">The request containing Product details.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation if needed.</param>
+    /// <returns>A response with the updated Product data or validation errors.</returns>
+    /// <response code="201">Product updated successfully. Returns the Product details in the response body.</response>
+    /// <response code="400">Bad Request. Validation failed for the provided Product data.</response>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<UpdateProductResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var validator = new UpdateProductRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<UpdateProductCommand>(request);
+            command.Id = id;
+            var response = await _mediator.Send(command, cancellationToken);
+
+            return Created(string.Empty, new ApiResponseWithData<UpdateProductResponse>
+            {
+                Success = true,
+                Message = "Product updated successfully",
+                Data = _mapper.Map<UpdateProductResponse>(response)
+            });
         }
         catch (Exception e)
         {

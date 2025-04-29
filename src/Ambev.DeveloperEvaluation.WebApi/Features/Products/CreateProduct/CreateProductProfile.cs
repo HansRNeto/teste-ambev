@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Application.Product.CreateProduct;
+using Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.CreateProduct;

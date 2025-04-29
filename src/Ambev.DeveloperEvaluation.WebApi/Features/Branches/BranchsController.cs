@@ -1,11 +1,13 @@
 using Ambev.DeveloperEvaluation.Application.Branch.CreateBranch;
 using Ambev.DeveloperEvaluation.Application.Branch.GetBranch;
 using Ambev.DeveloperEvaluation.Application.Branch.ListBranches;
+using Ambev.DeveloperEvaluation.Application.Branch.UpdateBranch;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.CreateBranch;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.DeleteBranch;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.GetBranch;
 using Ambev.DeveloperEvaluation.WebApi.Features.Branches.ListBranches;
+using Ambev.DeveloperEvaluation.WebApi.Features.Branches.UpdateBranch;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +81,7 @@ public class BranchsController : BaseController
     /// </summary>
     /// <remarks>
     /// This endpoint allows clients to retrieve detailed information about a Branch using its unique ID.
-    /// It validates the request ID and returns a response containing the Branch's data, including customer, branch, 
+    /// It validates the request ID and returns a response containing the Branch's data, including Branch, branch, 
     /// total amount, and other relevant Branch details. The operation supports error handling in case the Branch ID is invalid 
     /// or not found in the system.
     /// </remarks>
@@ -118,7 +120,7 @@ public class BranchsController : BaseController
     /// </summary>
     /// <remarks>
     /// This endpoint allows clients to retrieve a list of Branches with support for pagination and optional sorting by a specified field.
-    /// It validates the request parameters and returns a paginated collection of Branches, including information such as customer, branch, 
+    /// It validates the request parameters and returns a paginated collection of Branches, including information such as Branch, branch, 
     /// total amount, and Branch status. The operation supports error handling for invalid requests or if no Branches are found.
     /// </remarks>
     /// <param name="pageNumber">The number of the page to be retrieved (starting from 1).</param>
@@ -161,6 +163,46 @@ public class BranchsController : BaseController
 
             var result = _mapper.Map<List<ListBranchesResponse>>(response);
             return Ok(result, "List Branches retrieved successfully");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    /// <summary>
+    /// Update a Branch.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="request">The request containing Branch details.</param>
+    /// <param name="cancellationToken">The cancellation token to cancel the operation if needed.</param>
+    /// <returns>A response with the updated Branch data or validation errors.</returns>
+    /// <response code="201">Branch updated successfully. Returns the Branch details in the response body.</response>
+    /// <response code="400">Bad Request. Validation failed for the provided Branch data.</response>
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType(typeof(ApiResponseWithData<UpdateBranchResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateBranch([FromRoute] Guid id, [FromBody] UpdateBranchRequest request,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var validator = new UpdateBranchRequestValidator();
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var command = _mapper.Map<UpdateBranchCommand>(request);
+            command.Id = id;
+            var response = await _mediator.Send(command, cancellationToken);
+
+            return Created(string.Empty, new ApiResponseWithData<UpdateBranchResponse>
+            {
+                Success = true,
+                Message = "Branch updated successfully",
+                Data = _mapper.Map<UpdateBranchResponse>(response)
+            });
         }
         catch (Exception e)
         {

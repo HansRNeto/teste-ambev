@@ -45,7 +45,7 @@ public class BranchRepository : IBranchRepository
     /// <returns>The branch if found, otherwise null.</returns>
     public async Task<Branch?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Branches.FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+        return await _context.Branches.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
     
     /// <summary>
@@ -71,6 +71,24 @@ public class BranchRepository : IBranchRepository
         query = query.Skip(pageSize * (page - 1)).Take(pageSize);
 
         return await query.ToListAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Update a Branch in the database.
+    /// </summary>
+    /// <param name="branch"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A <see cref="Task{Branch}"/> representing the asynchronous operation, with the updated Branch as the result.</returns>
+    public async Task<Branch> UpdateAsync(Branch branch, CancellationToken cancellationToken)
+    {
+        _context.Branches.Attach(branch);
+        _context.Entry(branch).Property(x => x.Name).IsModified = true;
+        _context.Entry(branch).Property(x => x.Address).IsModified = true;
+        _context.Entry(branch).Property(x => x.IsActive).IsModified = true;
+        _context.Entry(branch).Property(x => x.UpdatedAt).IsModified = true;
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return branch;
     }
 
     /// <summary>

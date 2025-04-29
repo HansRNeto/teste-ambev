@@ -1,19 +1,23 @@
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Product.CreateProduct
+namespace Ambev.DeveloperEvaluation.Application.Product.UpdateProduct
 {
     /// <summary>
-    /// Validator for the <see cref="CreateProductCommand"/>.
+    /// Validator class for validating the <see cref="UpdateProductCommand"/>.
     /// </summary>
     /// <remarks>
-    /// Validates the properties of the <see cref="CreateProductCommand"/> to ensure they meet business rules before being processed.
+    /// This validator ensures that all the fields in the <see cref="UpdateProductCommand"/>
+    /// are valid before the command is processed. It includes validation for:
+    /// - Name: Cannot be empty.
+    /// - Email: Cannot be empty and must be a valid email format.
+    /// - IsActive: Defaults to true, and no specific validation is needed for this property.
     /// </remarks>
-    public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
+    public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateProductCommandValidator"/> class.
+        /// Initializes a new instance of the <see cref="UpdateProductCommandValidator"/> class.
         /// </summary>
-        public CreateProductCommandValidator()
+        public UpdateProductCommandValidator()
         {
             RuleFor(command => command.Name)
                 .NotEmpty().WithMessage("Product name is required.")

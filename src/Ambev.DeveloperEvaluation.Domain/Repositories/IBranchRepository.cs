@@ -30,6 +30,14 @@ public interface IBranchRepository
     /// <param name="cancellationToken">Cancellation token to cancel the operation if needed.</param>
     /// <returns>A paginated and sorted collection of Branches.</returns>
     Task<List<Branch>> ListAsync(int page, int pageSize, string? sortBy, string? sortDirection, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Update a Branch in the repository
+    /// </summary>
+    /// <param name="branch"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The updated Branch</returns>
+    Task<Branch> UpdateAsync(Branch branch, CancellationToken cancellationToken);
     
     /// <summary>
     /// Deletes a Branch from the repository

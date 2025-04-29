@@ -23,7 +23,7 @@ public class Sale : BaseEntity
     /// <summary>
     /// Gets or sets the date when the sale was made.
     /// </summary>
-    public DateTime SaleDate { get; set; } = DateTime.Now;
+    public DateTime SaleDate { get; set; }
 
     /// <summary>
     /// Gets or sets the unique identifier of the customer associated with the sale.
@@ -58,12 +58,12 @@ public class Sale : BaseEntity
     /// <summary>
     /// Gets or sets the UTC timestamp of when the sale record was created.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the UTC timestamp of when the sale record was last updated.
     /// </summary>
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the list of items included in the sale.

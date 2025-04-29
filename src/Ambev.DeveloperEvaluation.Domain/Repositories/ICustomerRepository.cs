@@ -39,7 +39,14 @@ public interface ICustomerRepository
     /// <returns>A paginated and sorted collection of Customers.</returns>
     Task<List<Customer>> ListAsync(int page, int pageSize, string? sortBy, string? sortDirection, CancellationToken cancellationToken);
 
-
+    /// <summary>
+    /// Update a Customer in the repository
+    /// </summary>
+    /// <param name="customer"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The updated Customer</returns>
+    Task<Customer> UpdateAsync(Customer customer, CancellationToken cancellationToken);
+    
     /// <summary>
     /// Deletes a Customer from the repository
     /// </summary>

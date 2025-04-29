@@ -62,12 +62,12 @@ public class SaleItem : BaseEntity
     /// <summary>
     /// Gets or sets the creation timestamp of the SaleItem.
     /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the last updated timestamp of the SaleItem.
     /// </summary>
-    public DateTime UpdatedAt { get; set; } = DateTime.Now;
+    public DateTime UpdatedAt { get; set; }
     
     /// <summary>
     /// Gets or sets the Sale associated with this SaleItem.

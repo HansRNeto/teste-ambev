@@ -36,6 +36,14 @@ public interface ISaleRepository
         string sortDirection,
         CancellationToken cancellationToken = default
     );
+    
+    /// <summary>
+    /// Update a Sale in the repository
+    /// </summary>
+    /// <param name="sale"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>The updated Sale</returns>
+    Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken);
 
     /// <summary>
     /// Deletes a sale from the repository
